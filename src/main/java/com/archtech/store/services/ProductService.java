@@ -1,4 +1,4 @@
-package com.archtech.store.service;
+package com.archtech.store.services;
 
 import com.archtech.store.model.*;
 import com.archtech.store.repository.*;

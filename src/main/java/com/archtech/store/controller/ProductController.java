@@ -1,12 +1,10 @@
 package com.archtech.store.controller;
 
 import com.archtech.store.model.Product;
-import com.archtech.store.service.ProductService;
+import com.archtech.store.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import com.archtech.store.services.*;
 
 @RestController
 @RequestMapping("/api/products")

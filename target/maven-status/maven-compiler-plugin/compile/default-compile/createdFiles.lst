@@ -1,0 +1,14 @@
+com\archtech\store\dto\SignupRequest.class
+com\archtech\store\model\UserAccount.class
+com\archtech\store\services\UserAccountService.class
+com\archtech\store\controller\UserAccountController.class
+com\archtech\store\config\SecurityConfig.class
+com\archtech\store\StoreApplication.class
+com\archtech\store\repository\ProductRepository.class
+com\archtech\store\service\ProductService.class
+com\archtech\store\dto\ChangePasswordRequest.class
+com\archtech\store\dto\SigninRequest.class
+com\archtech\store\repository\UserAccountRepository.class
+com\archtech\store\dto\ApiResponse.class
+com\archtech\store\controller\ProductController.class
+com\archtech\store\model\Product.class

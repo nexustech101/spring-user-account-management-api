@@ -1,0 +1,149 @@
+### User Authentication API Tests
+### Base URL: http://localhost:9090
+
+### Variables for reusable values
+@baseUrl = http://localhost:9090
+@testUserId = 1
+@testUsername = testuser2024
+@testEmail = testuser@example.com
+@testPassword = securepassword123
+
+###
+### 1. Sign up a new user
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "{{testUsername}}",
+  "email": "{{testEmail}}",
+  "password": "{{testPassword}}"
+}
+
+###
+### 2. Sign up another user for testing
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Alice Williams",
+  "userName": "alicew",
+  "email": "alice.williams@example.com",
+  "password": "alicepassword123"
+}
+
+###
+### 3. Sign up with validation errors (should fail - short password)
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Bad User",
+  "userName": "baduser",
+  "email": "bad@example.com",
+  "password": "12345"
+}
+
+###
+### 4. Sign up with duplicate username (should fail)
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Duplicate User",
+  "userName": "{{testUsername}}",
+  "email": "different@example.com",
+  "password": "validpassword123"
+}
+
+###
+### 5. Sign in with username
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "{{testUsername}}",
+  "password": "{{testPassword}}"
+}
+
+###
+### 6. Sign in with email
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "{{testEmail}}",
+  "password": "{{testPassword}}"
+}
+
+###
+### 7. Sign in with wrong password (should fail)
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "{{testUsername}}",
+  "password": "wrongpassword"
+}
+
+###
+### 8. Sign in with non-existent user (should fail)
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "nonexistentuser",
+  "password": "somepassword"
+}
+
+###
+### 9. Change password (valid current password)
+PUT {{baseUrl}}/api/users/{{testUserId}}/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "{{testPassword}}",
+  "newPassword": "newsecurepassword456"
+}
+
+###
+### 10. Change password with wrong current password (should fail)
+PUT {{baseUrl}}/api/users/{{testUserId}}/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "wrongcurrentpassword",
+  "newPassword": "anothernewpassword789"
+}
+
+###
+### 11. Change password with short new password (should fail)
+PUT {{baseUrl}}/api/users/{{testUserId}}/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "newsecurepassword456",
+  "newPassword": "short"
+}
+
+###
+### 12. Test sign in with new password
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "{{testUsername}}",
+  "password": "newsecurepassword456"
+}
+
+###
+### 13. Sign up user with special characters in name
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "María García-López",
+  "userName": "mariag",
+  "email": "maria.garcia@example.com",
+  "password": "mariapassword123"
+}

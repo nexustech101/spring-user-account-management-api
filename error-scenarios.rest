@@ -1,0 +1,284 @@
+### Error Scenarios and Edge Cases API Tests
+### Base URL: http://localhost:9090
+
+### Variables for reusable values
+@baseUrl = http://localhost:9090
+@nonExistentId = 999999
+
+###
+### VALIDATION ERROR TESTS
+###
+
+### 1. Sign up with missing required fields
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "",
+  "userName": "",
+  "email": "",
+  "password": ""
+}
+
+###
+### 2. Sign up with invalid email format
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "testuser",
+  "email": "invalid-email-format",
+  "password": "validpassword123"
+}
+
+###
+### 3. Sign up with too short name
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "A",
+  "userName": "testuser",
+  "email": "test@example.com",
+  "password": "validpassword123"
+}
+
+###
+### 4. Sign up with too short username
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "ab",
+  "email": "test@example.com",
+  "password": "validpassword123"
+}
+
+###
+### 5. Sign up with too long username
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "this_is_a_very_long_username_that_exceeds_the_fifty_character_limit_set_in_validation",
+  "email": "test@example.com",
+  "password": "validpassword123"
+}
+
+###
+### 6. Sign up with password too short
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "testuser",
+  "email": "test@example.com",
+  "password": "123"
+}
+
+###
+### 7. Sign in with empty credentials
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "",
+  "password": ""
+}
+
+###
+### 8. Sign in with only username provided
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "testuser"
+}
+
+###
+### 9. Sign in with only password provided
+POST {{baseUrl}}/api/users/signin
+Content-Type: application/json
+
+{
+  "password": "password123"
+}
+
+###
+### 10. Change password with empty current password
+PUT {{baseUrl}}/api/users/1/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "",
+  "newPassword": "newvalidpassword123"
+}
+
+###
+### 11. Change password with empty new password
+PUT {{baseUrl}}/api/users/1/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "currentpassword123",
+  "newPassword": ""
+}
+
+###
+### NOT FOUND ERROR TESTS
+###
+
+### 12. Get user by non-existent ID
+GET {{baseUrl}}/api/users/{{nonExistentId}}
+Accept: application/json
+
+###
+### 13. Update email for non-existent user
+PUT {{baseUrl}}/api/users/{{nonExistentId}}/email?email=new@example.com
+Accept: application/json
+
+###
+### 14. Update password for non-existent user
+PUT {{baseUrl}}/api/users/{{nonExistentId}}/password?password=newpassword123
+Accept: application/json
+
+###
+### 15. Delete non-existent user
+DELETE {{baseUrl}}/api/users/{{nonExistentId}}
+
+###
+### 16. Change password for non-existent user
+PUT {{baseUrl}}/api/users/{{nonExistentId}}/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "anypassword",
+  "newPassword": "newpassword123"
+}
+
+###
+### MALFORMED REQUEST TESTS
+###
+
+### 17. Create user with invalid JSON
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "testuser"
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+### 18. Sign up with null values
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": null,
+  "userName": null,
+  "email": null,
+  "password": null
+}
+
+###
+### 19. Create user with wrong content type
+POST {{baseUrl}}/api/users
+Content-Type: text/plain
+
+{
+  "name": "Test User",
+  "userName": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+### 20. Update email with missing parameter
+PUT {{baseUrl}}/api/users/1/email
+Accept: application/json
+
+###
+### 21. Update password with missing parameter
+PUT {{baseUrl}}/api/users/1/password
+Accept: application/json
+
+###
+### 22. Check password with missing parameter
+POST {{baseUrl}}/api/users/1/check-password
+Accept: application/json
+
+###
+### 23. Check email with missing parameter
+POST {{baseUrl}}/api/users/1/check-email
+Accept: application/json
+
+###
+### INVALID DATA TYPE TESTS
+###
+
+### 24. Get user with non-numeric ID
+GET {{baseUrl}}/api/users/invalid-id
+Accept: application/json
+
+###
+### 25. Update email for user with non-numeric ID
+PUT {{baseUrl}}/api/users/invalid-id/email?email=test@example.com
+Accept: application/json
+
+###
+### 26. Create user with extra unexpected fields
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "testuser",
+  "email": "test@example.com",
+  "password": "password123",
+  "unexpectedField": "unexpected value",
+  "anotherField": 12345
+}
+
+###
+### 27. Sign up with wrong data types
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": 12345,
+  "userName": true,
+  "email": ["array", "instead", "of", "string"],
+  "password": {"object": "instead of string"}
+}
+
+###
+### HTTP METHOD ERROR TESTS
+###
+
+### 28. Use POST instead of GET for getting users
+POST {{baseUrl}}/api/users
+Accept: application/json
+
+###
+### 29. Use GET instead of POST for creating user
+GET {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "userName": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+### 30. Use GET instead of DELETE for deleting user
+GET {{baseUrl}}/api/users/1
+Method: DELETE

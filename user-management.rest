@@ -1,0 +1,78 @@
+### User Account Management API Tests
+### Base URL: http://localhost:9090
+
+### Variables for reusable values
+@baseUrl = http://localhost:9090
+@userId = 1
+@testEmail = john.doe@example.com
+@testPassword = password123
+
+###
+### 1. Create a new user account (Direct UserAccount object)
+POST {{baseUrl}}/api/users/signup
+Content-Type: application/json
+
+{
+  "name": "Charles DeFreese III",
+  "userName": "cdefre3",
+  "email": "cdefre3@wgu.edu",
+  "password": "password123"
+}
+
+###
+### 2. Get all users
+GET {{baseUrl}}/api/users
+Accept: application/json
+
+###
+### 3. Get user by ID
+GET {{baseUrl}}/api/users/{{userId}}
+Accept: application/json
+
+###
+### 4. Update user email
+PUT {{baseUrl}}/api/users/{{userId}}/email?email=john.updated@example.com
+Accept: application/json
+
+###
+### 5. Update user password
+PUT {{baseUrl}}/api/users/{{userId}}/password?password=newpassword123
+Accept: application/json
+
+###
+### 6. Check user password
+POST {{baseUrl}}/api/users/{{userId}}/check-password?password={{testPassword}}
+Accept: application/json
+
+###
+### 7. Check user email
+POST {{baseUrl}}/api/users/{{userId}}/check-email?email={{testEmail}}
+Accept: application/json
+
+###
+### 8. Delete user account (WARNING: This will delete the user)
+DELETE {{baseUrl}}/api/users/{{userId}}
+
+###
+### Create another test user for further testing
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "userName": "janesmith",
+  "email": "jane.smith@example.com",
+  "password": "janepassword456"
+}
+
+###
+### Create a third test user
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Bob Johnson",
+  "userName": "bobjohnson",
+  "email": "bob.johnson@example.com",
+  "password": "bobpassword789"
+}

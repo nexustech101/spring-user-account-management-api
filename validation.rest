@@ -1,0 +1,119 @@
+### User Validation API Tests
+### Base URL: http://localhost:9090
+
+### Variables for reusable values
+@baseUrl = http://localhost:9090
+@testUserId = 1
+@existingUsername = testuser2024
+@existingEmail = testuser@example.com
+@validPassword = securepassword123
+
+###
+### 1. Check if username is available (new username - should be available)
+GET {{baseUrl}}/api/users/check-username/newusername2024
+Accept: application/json
+
+###
+### 2. Check if username is available (existing username - should be taken)
+GET {{baseUrl}}/api/users/check-username/{{existingUsername}}
+Accept: application/json
+
+###
+### 3. Check username availability with special characters
+GET {{baseUrl}}/api/users/check-username/user_with_underscore
+Accept: application/json
+
+###
+### 4. Check username availability with numbers
+GET {{baseUrl}}/api/users/check-username/user12345
+Accept: application/json
+
+###
+### 5. Check username availability (short username)
+GET {{baseUrl}}/api/users/check-username/ab
+Accept: application/json
+
+###
+### 6. Check username availability (long username)
+GET {{baseUrl}}/api/users/check-username/thisisaverylongusernamethatexceedsusuallengthlimits
+Accept: application/json
+
+###
+### 7. Check if email is available (new email - should be available)
+GET {{baseUrl}}/api/users/check-email/newemail@example.com
+Accept: application/json
+
+###
+### 8. Check if email is available (existing email - should be taken)
+GET {{baseUrl}}/api/users/check-email/{{existingEmail}}
+Accept: application/json
+
+###
+### 9. Check email availability with different domains
+GET {{baseUrl}}/api/users/check-email/user@gmail.com
+Accept: application/json
+
+###
+### 10. Check email availability with subdomain
+GET {{baseUrl}}/api/users/check-email/user@mail.google.com
+Accept: application/json
+
+###
+### 11. Check email availability with plus addressing
+GET {{baseUrl}}/api/users/check-email/user+test@example.com
+Accept: application/json
+
+###
+### 12. Check email availability with dots in local part
+GET {{baseUrl}}/api/users/check-email/user.name@example.com
+Accept: application/json
+
+###
+### 13. Verify password for existing user (correct password)
+POST {{baseUrl}}/api/users/{{testUserId}}/check-password?password={{validPassword}}
+Accept: application/json
+
+###
+### 14. Verify password for existing user (incorrect password)
+POST {{baseUrl}}/api/users/{{testUserId}}/check-password?password=wrongpassword123
+Accept: application/json
+
+###
+### 15. Verify email for existing user (correct email)
+POST {{baseUrl}}/api/users/{{testUserId}}/check-email?email={{existingEmail}}
+Accept: application/json
+
+###
+### 16. Verify email for existing user (incorrect email)
+POST {{baseUrl}}/api/users/{{testUserId}}/check-email?email=wrong@example.com
+Accept: application/json
+
+###
+### 17. Check password for non-existent user (should handle gracefully)
+POST {{baseUrl}}/api/users/999/check-password?password=anypassword
+Accept: application/json
+
+###
+### 18. Check email for non-existent user (should handle gracefully)
+POST {{baseUrl}}/api/users/999/check-email?email=any@example.com
+Accept: application/json
+
+###
+### 19. Check username availability with case variations
+GET {{baseUrl}}/api/users/check-username/TestUser2024
+Accept: application/json
+
+###
+### 20. Check email availability with case variations
+GET {{baseUrl}}/api/users/check-email/TestUser@Example.Com
+Accept: application/json
+
+###
+### 21. Check username availability with URL encoding needed
+GET {{baseUrl}}/api/users/check-username/user%40symbol
+Accept: application/json
+
+###
+### 22. Check empty password (should handle edge case)
+POST {{baseUrl}}/api/users/{{testUserId}}/check-password?password=
+Accept: application/json

@@ -1,0 +1,14 @@
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\config\SecurityConfig.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\controller\ProductController.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\controller\UserAccountController.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\dto\ApiResponse.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\dto\ChangePasswordRequest.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\dto\SigninRequest.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\dto\SignupRequest.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\model\Product.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\model\UserAccount.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\repository\ProductRepository.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\repository\UserAccountRepository.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\services\ProductService.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\services\UserAccountService.java
+C:\Java\SpringBoot\store\src\main\java\com\archtech\store\StoreApplication.java

@@ -18,19 +18,24 @@ public class SecurityConfig {
     }
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints - no authentication needed
                 .requestMatchers(
-                    "/api/users/signup", 
-                    "/api/users/signin", 
-                    "/api/users/check-username/**", 
-                    "/api/users/check-email/**"
+                    "/api/v1/users/signup", 
+                    "/api/v1/users/signin", 
+                    "/api/v1/users/check-username/**", 
+                    "/api/v1/users/check-email/**",
+                    "/api/v1/users/**",
+                    "/api/v1/products/**"
                 ).permitAll()
-                .requestMatchers("/api/products/**").permitAll()
-                .anyRequest().authenticated()
+                // Everything else - no authentication required (for now)
+                .anyRequest().permitAll()
             );
         
         return http.build();

@@ -21,49 +21,49 @@ public class UserAccountService {
     }
 
     public List<UserAccount> getAllUsers() {
-        return repository.findAll();
+        return this.repository.findAll();
     }
 
     public Optional<UserAccount> getUserById(Long id) {
-        return repository.findById(id);
+        return this.repository.findById(id);
     }
 
     public UserAccount createUser(UserAccount user) {
         // Always hash the password before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        return this.repository.save(user);
     }
 
     public UserAccount updateEmail(Long id, String email) throws RuntimeException {
-        return repository.findById(id)
+        return this.repository.findById(id)
                 .map(user -> {
                     user.setEmail(email);
-                    return repository.save(user);
+                    return this.repository.save(user);
                 })
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
     public UserAccount updatePassword(Long id, String newPassword) throws RuntimeException {
-        return repository.findById(id)
+        return this.repository.findById(id)
                 .map(user -> {
-                    user.setPassword(passwordEncoder.encode(newPassword));
-                    return repository.save(user);
+                    user.setPassword(this.passwordEncoder.encode(newPassword));
+                    return this.repository.save(user);
                 })
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
     public void deleteUser(Long id) {
-        repository.deleteById(id);
+        this.repository.deleteById(id);
     }
 
     public boolean checkPassword(Long id, String rawPassword) {
-        return repository.findById(id)
-                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+        return this.repository.findById(id)
+                .map(user -> this.passwordEncoder.matches(rawPassword, user.getPassword()))
                 .orElse(false);
     }
 
     public boolean checkEmail(Long id, String email) {
-        return repository.findById(id)
+        return this.repository.findById(id)
                 .map(user -> user.getEmail().equals(email))
                 .orElse(false);
     }
@@ -71,12 +71,12 @@ public class UserAccountService {
     // Authentication methods
     public UserAccount signup(SignupRequest signupRequest) {
         // Check if username already exists
-        if (repository.existsByUserName(signupRequest.getUserName())) {
+        if (this.repository.existsByUserName(signupRequest.getUserName())) {
             throw new RuntimeException("Username is already taken!");
         }
         
         // Check if email already exists
-        if (repository.existsByEmail(signupRequest.getEmail())) {
+        if (this.repository.existsByEmail(signupRequest.getEmail())) {
             throw new RuntimeException("Email is already in use!");
         }
         
@@ -85,23 +85,23 @@ public class UserAccountService {
             signupRequest.getName(),
             signupRequest.getUserName(),
             signupRequest.getEmail(),
-            passwordEncoder.encode(signupRequest.getPassword())
+            this.passwordEncoder.encode(signupRequest.getPassword())
         );
         
-        return repository.save(user);
+        return this.repository.save(user);
     }
     
     public Optional<UserAccount> signin(SigninRequest signinRequest) {
         // Try to find user by username first
-        Optional<UserAccount> userOpt = repository.findByUserName(signinRequest.getUsernameOrEmail());
+        Optional<UserAccount> userOpt = this.repository.findByUserName(signinRequest.getUsernameOrEmail());
         
         // If not found by username, try email
         if (!userOpt.isPresent()) {
-            userOpt = repository.findByEmail(signinRequest.getUsernameOrEmail());
+            userOpt = this.repository.findByEmail(signinRequest.getUsernameOrEmail());
         }
         
         // Validate password if user found
-        if (userOpt.isPresent() && passwordEncoder.matches(signinRequest.getPassword(), userOpt.get().getPassword())) {
+        if (userOpt.isPresent() && this.passwordEncoder.matches(signinRequest.getPassword(), userOpt.get().getPassword())) {
             return userOpt;
         }
         
@@ -109,32 +109,32 @@ public class UserAccountService {
     }
     
     public UserAccount changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
-        UserAccount user = repository.findById(userId)
+        UserAccount user = this.repository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
         
         // Check if current password matches
-        if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+        if (!this.passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
             throw new RuntimeException("Current password is incorrect!");
         }
         
         // Update with new password
-        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-        return repository.save(user);
+        user.setPassword(this.passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        return this.repository.save(user);
     }
     
     public Optional<UserAccount> findByUsername(String username) {
-        return repository.findByUserName(username);
+        return this.repository.findByUserName(username);
     }
     
     public Optional<UserAccount> findByEmail(String email) {
-        return repository.findByEmail(email);
+        return this.repository.findByEmail(email);
     }
     
     public boolean existsByUsername(String username) {
-        return repository.existsByUserName(username);
+        return this.repository.existsByUserName(username);
     }
     
     public boolean existsByEmail(String email) {
-        return repository.existsByEmail(email);
+        return this.repository.existsByEmail(email);
     }
 }

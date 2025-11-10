@@ -2,16 +2,18 @@ package com.archtech.store.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+// @Table(name = "UserAccount")
 public class UserAccount {
 
     // Data fields
@@ -28,19 +30,19 @@ public class UserAccount {
     @UpdateTimestamp
     private LocalDateTime updatedDate;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 100)
     private String userName;
 
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     // Default constructor required by JPA
-    public UserAccount() {
-    }
+    public UserAccount() {}
 
+    // Constructor for controller
     public UserAccount(
         String name, 
         String userName, 
@@ -53,6 +55,7 @@ public class UserAccount {
         this.password = password;
     }
 
+    // Constructor for modifying database
     public UserAccount(
         String name, 
         String userName, 
@@ -75,36 +78,6 @@ public class UserAccount {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setName(String fName, String lName) {
-        StringBuilder name = new StringBuilder();
-        name.append(fName);
-        name.append(" ");
-        name.append(lName);
-        this.name = name.toString();
-    }
-
-    public void setName(String fName, String mName, String lName) {
-        StringBuilder name = new StringBuilder();
-        name.append(fName);
-        name.append(" ");
-        name.append(mName);
-        name.append(" ");
-        name.append(lName);
-        this.name = name.toString();
-    }
-
-    public void setName(String fName, String mName, String lName, String suffix) {
-        StringBuilder name = new StringBuilder();
-        name.append(fName);
-        name.append(" ");
-        name.append(mName);
-        name.append(" ");
-        name.append(lName);
-        name.append(" ");
-        name.append(suffix);
-        this.name = name.toString();
     }
 
     public void setName(String[] fullName) {

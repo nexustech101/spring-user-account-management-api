@@ -7,15 +7,17 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@CrossOrigin(origins = {"http://localhost:5501", "/**"})
+@RequestMapping("/api/v1/users")
 public class UserAccountController {
 
-    private final com.archtech.store.services.UserAccountService service;
+    private final UserAccountService service;
 
     public UserAccountController(UserAccountService service) {
         this.service = service;
@@ -24,20 +26,20 @@ public class UserAccountController {
     // Create user account
     @PostMapping
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccount user) {
-        UserAccount created = service.createUser(user);
+        UserAccount created = this.service.createUser(user);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     // Get all user
     @GetMapping
     public ResponseEntity<List<UserAccount>> getAllUsers() {
-        return ResponseEntity.ok(service.getAllUsers());
+        return ResponseEntity.ok(this.service.getAllUsers());
     }
 
     // Get user by id
     @GetMapping("/{id}")
     public ResponseEntity<UserAccount> getUserById(@PathVariable Long id) {
-        return service.getUserById(id)
+        return this.service.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -49,7 +51,7 @@ public class UserAccountController {
         @RequestParam String email
     ) throws RuntimeException {
         try {
-            UserAccount updated = service.updateEmail(id, email);
+            UserAccount updated = this.service.updateEmail(id, email);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -63,7 +65,7 @@ public class UserAccountController {
         @RequestParam String password
     ) throws RuntimeException {
         try {
-            UserAccount updated = service.updatePassword(id, password);
+            UserAccount updated = this.service.updatePassword(id, password);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -73,21 +75,21 @@ public class UserAccountController {
     // Delete user account
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        service.deleteUser(id);
+        this.service.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     // Check user password
     @PostMapping("/{id}/check-password")
     public ResponseEntity<Boolean> checkPassword(@PathVariable Long id, @RequestParam String password) {
-        boolean matches = service.checkPassword(id, password);
+        boolean matches = this.service.checkPassword(id, password);
         return ResponseEntity.ok(matches);
     }
 
     // Check user email
     @PostMapping("/{id}/check-email")
     public ResponseEntity<Boolean> checkEmail(@PathVariable Long id, @RequestParam String email) {
-        boolean matches = service.checkEmail(id, email);
+        boolean matches = this.service.checkEmail(id, email);
         return ResponseEntity.ok(matches);
     }
     
@@ -95,7 +97,7 @@ public class UserAccountController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
         try {
-            UserAccount user = service.signup(signupRequest);
+            UserAccount user = this.service.signup(signupRequest);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(true, "User registered successfully", user));
         } catch (RuntimeException e) {
@@ -106,7 +108,7 @@ public class UserAccountController {
     
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse> signin(@Valid @RequestBody SigninRequest signinRequest) {
-        Optional<UserAccount> userOpt = service.signin(signinRequest);
+        Optional<UserAccount> userOpt = this.service.signin(signinRequest);
         
         if (userOpt.isPresent()) {
             return ResponseEntity.ok(new ApiResponse(true, "Login successful", userOpt.get()));
@@ -117,11 +119,9 @@ public class UserAccountController {
     }
     
     @PutMapping("/{id}/change-password")
-    public ResponseEntity<ApiResponse> changePassword(
-            @PathVariable Long id,
-            @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<ApiResponse> changePassword(@PathVariable Long id, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         try {
-            UserAccount user = service.changePassword(id, changePasswordRequest);
+            UserAccount user = this.service.changePassword(id, changePasswordRequest);
             return ResponseEntity.ok(new ApiResponse(true, "Password changed successfully", user));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -131,14 +131,14 @@ public class UserAccountController {
     
     @GetMapping("/check-username/{username}")
     public ResponseEntity<ApiResponse> checkUsernameAvailability(@PathVariable String username) {
-        boolean isAvailable = !service.existsByUsername(username);
+        boolean isAvailable = !this.service.existsByUsername(username);
         String message = isAvailable ? "Username is available" : "Username is already taken";
         return ResponseEntity.ok(new ApiResponse(isAvailable, message));
     }
     
     @GetMapping("/check-email/{email}")
     public ResponseEntity<ApiResponse> checkEmailAvailability(@PathVariable String email) {
-        boolean isAvailable = !service.existsByEmail(email);
+        boolean isAvailable = !this.service.existsByEmail(email);
         String message = isAvailable ? "Email is available" : "Email is already in use";
         return ResponseEntity.ok(new ApiResponse(isAvailable, message));
     }

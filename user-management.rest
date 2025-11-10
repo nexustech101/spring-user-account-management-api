@@ -9,7 +9,7 @@
 
 ###
 ### 1. Create a new user account (Direct UserAccount object)
-POST {{baseUrl}}/api/users/signup
+POST {{baseUrl}}/api/v1/users/signup
 Content-Type: application/json
 
 {
@@ -21,41 +21,41 @@ Content-Type: application/json
 
 ###
 ### 2. Get all users
-GET {{baseUrl}}/api/users
+GET {{baseUrl}}/api/v1/users
 Accept: application/json
 
 ###
 ### 3. Get user by ID
-GET {{baseUrl}}/api/users/{{userId}}
+GET {{baseUrl}}/api/v1/users/{{userId}}
 Accept: application/json
 
 ###
 ### 4. Update user email
-PUT {{baseUrl}}/api/users/{{userId}}/email?email=john.updated@example.com
+PUT {{baseUrl}}/api/v1/users/{{userId}}/email?email=john.updated@example.com
 Accept: application/json
 
 ###
 ### 5. Update user password
-PUT {{baseUrl}}/api/users/{{userId}}/password?password=newpassword123
+PUT {{baseUrl}}/api/v1/users/{{userId}}/password?password=newpassword123
 Accept: application/json
 
 ###
 ### 6. Check user password
-POST {{baseUrl}}/api/users/{{userId}}/check-password?password={{testPassword}}
+POST {{baseUrl}}/api/v1/users/{{userId}}/check-password?password={{testPassword}}
 Accept: application/json
 
 ###
 ### 7. Check user email
-POST {{baseUrl}}/api/users/{{userId}}/check-email?email={{testEmail}}
+POST {{baseUrl}}/api/v1/users/5/check-email?email=cdefre3@wgu.edu
 Accept: application/json
 
 ###
 ### 8. Delete user account (WARNING: This will delete the user)
-DELETE {{baseUrl}}/api/users/{{userId}}
+DELETE {{baseUrl}}/api/v1/users/{{userId}}
 
 ###
 ### Create another test user for further testing
-POST {{baseUrl}}/api/users
+POST {{baseUrl}}/api/v1/users
 Content-Type: application/json
 
 {
@@ -67,7 +67,7 @@ Content-Type: application/json
 
 ###
 ### Create a third test user
-POST {{baseUrl}}/api/users
+POST {{baseUrl}}/api/v1/users
 Content-Type: application/json
 
 {

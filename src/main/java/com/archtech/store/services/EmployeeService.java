@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class EmployeeService {
     private final EmployeeRepository repository;
 
@@ -19,7 +20,7 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllManagers() {
-        return this.repository.findByIsManagerTrue();
+        return this.repository.findAllManagers();
     }
 
     public Optional<Employee> getEmployee(Long id) {

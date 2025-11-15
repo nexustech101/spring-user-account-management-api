@@ -2,6 +2,7 @@ package com.archtech.store.repository;
 
 import com.archtech.store.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -14,6 +15,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // Custom query methods
     Optional<Employee> findById(Long employeeId);
     Optional<Employee> findByEmail(String employeeEmail);
-    List<Employee> findByIsManagerTrue();
+
+    @Query("SELECT e FROM Employee e WHERE e.isManager = true")
+    List<Employee> findAllManagers();
+
     boolean existsByEmail(String email);
 }

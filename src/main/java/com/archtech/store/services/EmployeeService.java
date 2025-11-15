@@ -18,6 +18,10 @@ public class EmployeeService {
         return this.repository.findAll();
     }
 
+    public List<Employee> getAllManagers() {
+        // @TODO: implement methods to get all managers in Employee table
+    }
+
     public Optional<Employee> getEmployee(Long id) {
         return this.repository.findById(id);
     }

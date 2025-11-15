@@ -45,6 +45,9 @@ public class Employee {
     @OneToMany(mappedBy = "manager")
     private Set<Employee> subordinates;
 
+    @Column(nullable = false)
+    private boolean isManager;
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 
@@ -60,13 +63,15 @@ public class Employee {
         String email, 
         String dept, 
         Double salary,
-        Employee manager
+        Employee manager,
+        boolean isManager
     ) {
         this.employeeName = employeeName;
         this.email = email;
         this.dept = dept;
         this.salary = salary;
         this.manager = manager;
+        this.isManager = isManager;
     }
 
     // Constructor for modifying database
@@ -75,7 +80,8 @@ public class Employee {
         String email, 
         String dept,
         Double salary, 
-        Employee manager, 
+        Employee manager,
+        boolean isManager,
         LocalDateTime createdDate, 
         LocalDateTime updatedDate
     ) {
@@ -84,6 +90,7 @@ public class Employee {
         this.dept = dept;
         this.salary = salary;
         this.manager = manager;
+        this.isManager = isManager;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
@@ -106,6 +113,10 @@ public class Employee {
 
     public void setManager(Employee manager) {
         this.manager = manager;
+    }
+
+    public void setIsManager(boolean isManager) {
+        this.isManager = isManager;
     }
 
     public void setSubordinates(Set<Employee> subordinates) {
@@ -142,6 +153,10 @@ public class Employee {
 
     public Employee getManager() {
         return this.manager;
+    }
+
+    public boolean getIsManager() {
+        return this.isManager;
     }
 
     public Set<Employee> getSubordinates() {

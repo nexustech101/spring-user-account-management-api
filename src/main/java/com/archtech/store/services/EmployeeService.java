@@ -19,7 +19,7 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllManagers() {
-        // @TODO: implement methods to get all managers in Employee table
+        return this.repository.findByIsManagerTrue();
     }
 
     public Optional<Employee> getEmployee(Long id) {

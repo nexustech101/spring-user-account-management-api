@@ -1,68 +1,123 @@
 package com.archtech.store.controller;
 
-import com.archtech.store.model.*;
-import com.archtech.store.services.*;
-import com.archtech.store.dto.*;
+import com.archtech.store.dto.EmployeeRequest;
+import com.archtech.store.model.Employee;
+import com.archtech.store.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5501", "/**"})
+@CrossOrigin(origins = { "http://localhost:5501", "/**" })
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
+
     private final EmployeeService service;
 
     public EmployeeController(EmployeeService service) {
         this.service = service;
     }
 
-    @GetMapping // Get all employees
+    /**
+     * Get all employees
+     */
+    @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        return ResponseEntity.ok(this.service.getAllEmployees());
+        return ResponseEntity.ok(service.getAllEmployees());
     }
 
-    @PostMapping // Create an employee
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee created = this.service.createEmployee(employee);
+    /**
+     * Create a new employee
+     */
+    @PostMapping
+    public ResponseEntity<Employee> createEmployee(
+            @Valid @RequestBody EmployeeRequest request) {
+
+        Employee created = service.createEmployee(request.toEntity());
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping("/managers") // Get all managers
+    /**
+     * Get all managers
+     */
+    @GetMapping("/managers")
     public ResponseEntity<List<Employee>> getAllManagers() {
-        return ResponseEntity.ok(this.service.getAllManagers());
+        return ResponseEntity.ok(service.getAllManagers());
     }
 
-    @GetMapping("/id/{id}") // Get employee by id
+    /**
+     * Get employee by ID
+     */
+    @GetMapping("/id/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        return this.service.getEmployee(id)
+        return service.getEmployee(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/email/{email}") // Get employee by email
+    /**
+     * Get employee by email
+     */
+    @GetMapping("/email/{email}")
     public ResponseEntity<Employee> getEmployeeByEmail(@PathVariable String email) {
-        return this.service.getEmployee(email)
+        return service.getEmployee(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}") // Update employee
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,
-            @RequestBody Employee employee) {
-        Employee updated = this.service.updateEmployee(id, employee);
-        return ResponseEntity.ok(updated);
+    /**
+     * Update employee by ID
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> updateEmployee(
+            @PathVariable Long id,
+            @Valid @RequestBody EmployeeRequest request) {
+        try {
+            Employee updated = service.updateEmployee(id, request.toEntity());
+            return ResponseEntity.ok(updated);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // @TODO: implement company logic somewhere to handle when a manager gets deleted or demoted
-    @DeleteMapping("/{id}") // Delete employee (handle edge cases for managers)
-    public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id) {
-        this.service.deleteById(id);
-        return ResponseEntity.noContent().build();
+    /**
+     * Delete an employee by ID.
+     * Route is separate because behavior differs significantly.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEmployeeById(@PathVariable Long id) {
+        try {
+            service.deleteEmployeeById(id);
+            return ResponseEntity.noContent().build();
+
+        } catch (IllegalStateException e) {
+            // Attempted to delete a manager using this route
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (RuntimeException e) {
+            // Employee not found
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    /**
+     * Delete a manager by ID (with reassignment logic).
+     * Route is separate because behavior differs significantly.
+     */
+    @DeleteMapping("/manager/{id}")
+    public ResponseEntity<?> deleteManagerById(@PathVariable Long id) {
+        try {
+            service.deleteManager(id);
+            return ResponseEntity.noContent().build();
+
+        } catch (RuntimeException e) {
+            // Either not found, or manager not found
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

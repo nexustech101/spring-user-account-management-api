@@ -48,6 +48,9 @@ public class Employee {
     @Column(nullable = false)
     private boolean isManager;
 
+    @Column(nullable = true)
+    private Integer numSubordinates; 
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 
@@ -64,7 +67,8 @@ public class Employee {
         String dept, 
         Double salary,
         Employee manager,
-        boolean isManager
+        boolean isManager,
+        Integer numSubordinates
     ) {
         this.employeeName = employeeName;
         this.email = email;
@@ -72,6 +76,7 @@ public class Employee {
         this.salary = salary;
         this.manager = manager;
         this.isManager = isManager;
+        this.numSubordinates = numSubordinates;
     }
 
     // Constructor for modifying database
@@ -82,6 +87,7 @@ public class Employee {
         Double salary, 
         Employee manager,
         boolean isManager,
+        Integer numSubordinates,
         LocalDateTime createdDate, 
         LocalDateTime updatedDate
     ) {
@@ -91,6 +97,7 @@ public class Employee {
         this.salary = salary;
         this.manager = manager;
         this.isManager = isManager;
+        this.numSubordinates = numSubordinates;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
@@ -111,12 +118,20 @@ public class Employee {
         this.dept = dept;
     }
 
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
     public void setManager(Employee manager) {
         this.manager = manager;
     }
 
     public void setIsManager(boolean isManager) {
         this.isManager = isManager;
+    }
+
+    public Integer getNumSubordinates() {
+        return (subordinates == null) ? 0 : subordinates.size();
     }
 
     public void setSubordinates(Set<Employee> subordinates) {
@@ -161,6 +176,10 @@ public class Employee {
 
     public Set<Employee> getSubordinates() {
         return this.subordinates;
+    }
+
+    public void setNumSubordinates(Integer numSubordinates) {
+        this.numSubordinates = numSubordinates;
     }
 
     public LocalDateTime getCreatedDate() {

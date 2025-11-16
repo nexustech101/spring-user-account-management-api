@@ -16,6 +16,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findById(Long employeeId);
     Optional<Employee> findByEmail(String employeeEmail);
 
+    @Query("SELECT e FROM Employee e WHERE INNER JOIN m ON e.id = m.manager_id")
+    List<Employee> findManagerById(Long id);
+
     @Query("SELECT e FROM Employee e WHERE e.isManager = true")
     List<Employee> findAllManagers();
 

@@ -22,7 +22,7 @@ public class EmployeeController {
         this.service = service;
     }
 
-    @GetMapping("/employees") // Get all employees
+    @GetMapping // Get all employees
     public ResponseEntity<List<Employee>> getAllEmployees() {
         return ResponseEntity.ok(this.service.getAllEmployees());
     }
@@ -33,26 +33,26 @@ public class EmployeeController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping("/managers")
+    @GetMapping("/managers") // Get all managers
     public ResponseEntity<List<Employee>> getAllManagers() {
         return ResponseEntity.ok(this.service.getAllManagers());
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/id/{id}") // Get employee by id
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
         return this.service.getEmployee(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/email/{email}") // Get employee by email
     public ResponseEntity<Employee> getEmployeeByEmail(@PathVariable String email) {
         return this.service.getEmployee(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // Update employee
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,
             @RequestBody Employee employee) {
         Employee updated = this.service.updateEmployee(id, employee);
@@ -60,8 +60,8 @@ public class EmployeeController {
     }
 
     // @TODO: implement company logic somewhere to handle when a manager gets deleted or demoted
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmplyeeById(@PathVariable Long id) {
+    @DeleteMapping("/{id}") // Delete employee (handle edge cases for managers)
+    public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long id) {
         this.service.deleteById(id);
         return ResponseEntity.noContent().build();
     }

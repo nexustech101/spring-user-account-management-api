@@ -36,8 +36,12 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(Long id, Employee employee) {
-        employee.setId(id);
-        return this.repository.save(employee);
+        return this.repository.findById(id)
+                .map(emp -> {
+                    emp.setId(id);
+                    return this.repository.save(emp);
+                })
+                .orElseThrow(() -> new RuntimeException("Employee not found with id " + id));
     }
 
     public void deleteById(Long id) {

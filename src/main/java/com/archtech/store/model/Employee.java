@@ -16,6 +16,8 @@ import jakarta.persistence.GenerationType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 // @Table(name = "Employee")
@@ -43,13 +45,11 @@ public class Employee {
     private Employee manager;
 
     @OneToMany(mappedBy = "manager")
+    @JsonIgnore // Prevent circular reference in JSON serialization
     private Set<Employee> subordinates;
 
     @Column(nullable = false)
     private boolean isManager;
-
-    @Column(nullable = true)
-    private Integer numSubordinates; 
 
     @CreationTimestamp
     private LocalDateTime createdDate;
@@ -60,15 +60,14 @@ public class Employee {
     // Default constructor required by JPA
     public Employee() {}
 
-    // Constructor for controller
+    // Constructor for creating new employees
     public Employee(
         String employeeName, 
         String email, 
         String dept, 
         Double salary,
         Employee manager,
-        boolean isManager,
-        Integer numSubordinates
+        boolean isManager
     ) {
         this.employeeName = employeeName;
         this.email = email;
@@ -76,30 +75,6 @@ public class Employee {
         this.salary = salary;
         this.manager = manager;
         this.isManager = isManager;
-        this.numSubordinates = numSubordinates;
-    }
-
-    // Constructor for modifying database
-    public Employee(
-        String employeeName, 
-        String email, 
-        String dept,
-        Double salary, 
-        Employee manager,
-        boolean isManager,
-        Integer numSubordinates,
-        LocalDateTime createdDate, 
-        LocalDateTime updatedDate
-    ) {
-        this.employeeName = employeeName;
-        this.email = email;
-        this.dept = dept;
-        this.salary = salary;
-        this.manager = manager;
-        this.isManager = isManager;
-        this.numSubordinates = numSubordinates;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
     }
 
     public void setId(Long id) {
@@ -176,10 +151,6 @@ public class Employee {
 
     public Set<Employee> getSubordinates() {
         return this.subordinates;
-    }
-
-    public void setNumSubordinates(Integer numSubordinates) {
-        this.numSubordinates = numSubordinates;
     }
 
     public LocalDateTime getCreatedDate() {

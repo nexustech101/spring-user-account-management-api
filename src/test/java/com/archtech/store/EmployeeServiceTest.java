@@ -16,12 +16,14 @@ import static org.mockito.Mockito.*;
 class EmployeeServiceTest {
 
     private EmployeeRepository repository;
+    private EmployeeValidationService validationService;
     private EmployeeService service;
 
     @BeforeEach
     void setup() {
         repository = Mockito.mock(EmployeeRepository.class);
-        service = new EmployeeService(repository);
+        validationService = Mockito.mock(EmployeeValidationService.class);
+        service = new EmployeeService(repository, validationService);
     }
 
     @Test
@@ -56,6 +58,9 @@ class EmployeeServiceTest {
     void testCreateEmployee() {
         Employee emp = new Employee("Charlie", "charlie@example.com", "Sales", 60000.0, null, false);
 
+        // Mock validation service to do nothing
+        doNothing().when(validationService).validateManagerAssignment(anyLong(), any());
+        
         when(repository.save(emp)).thenReturn(emp);
 
         Employee created = service.createEmployee(emp);

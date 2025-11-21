@@ -1,1 +1,4 @@
+com\archtech\store\EmployeeServiceTest.class
 com\archtech\store\StoreApplicationTests.class
+com\archtech\store\EmployeeRepositoryTest.class
+com\archtech\store\EmployeeControllerTest.class

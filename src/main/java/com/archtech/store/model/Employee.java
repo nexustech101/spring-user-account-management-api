@@ -45,7 +45,7 @@ public class Employee {
     private Employee manager;
 
     @OneToMany(mappedBy = "manager")
-    @JsonIgnore // Prevent circular reference in JSON serialization
+    @JsonIgnore // Prevents circular reference in JSON serialization
     private Set<Employee> subordinates;
 
     @Column(nullable = false)
@@ -151,6 +151,10 @@ public class Employee {
 
     public Set<Employee> getSubordinates() {
         return this.subordinates;
+    }
+
+    public void setNumSubordinates(Integer numSubordinates) {
+        this.numSubordinates = numSubordinates;
     }
 
     public LocalDateTime getCreatedDate() {

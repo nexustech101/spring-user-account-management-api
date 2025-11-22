@@ -153,10 +153,6 @@ public class Employee {
         return this.subordinates;
     }
 
-    public void setNumSubordinates(Integer numSubordinates) {
-        this.numSubordinates = numSubordinates;
-    }
-
     public LocalDateTime getCreatedDate() {
         return this.createdDate;
     }

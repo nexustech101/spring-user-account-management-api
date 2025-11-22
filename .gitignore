@@ -38,3 +38,5 @@ out/
 
 ### Misc Files ###
 *.rest
+API_DOCUMENTATION.md
+API_QUICKSTART_REFERENCE.md
